@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Graphic Graphs Example</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<script type="text/javascript" src="graphicgraphs.js"></script>
+  </head>
+  <body>
+
+  <canvas id="theCanvas" width="400px" height="400px" onload="main();" style="border:black medium solid">
+      Canvas not supported.
+  </canvas>
+  <canvas id="canvas2" width="200px" height="200px" onload="main();" style="border:black medium solid">
+      Canvas not supported.  	
+  </canvas>
+  <script type="text/javascript">
+    
+	var graphConfiguration = { 
+		"verticalMin": -100, "verticalMax": 100, 
+		"horizontalMin": -100, "horizontalMax": 100,
+		"horizontalTickIncrement":15, "verticalTickIncrement":10
+		};
+	
+	graphs_config(graphConfiguration);
+	
+    graphs_applyToCanvas("theCanvas");
+    
+	graphConfiguration = { 
+		"verticalMin": -15, "verticalMax": 100, 
+		"horizontalMin": -100, "horizontalMax": 100,
+		"horizontalTickIncrement":10, "verticalTickIncrement":10
+		};
+	
+	graphs_config(graphConfiguration);
+	
+    graphs_applyToCanvas("canvas2");
+	
+   </script>
+
+  </body>
+</html>
