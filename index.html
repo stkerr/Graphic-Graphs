@@ -7,10 +7,16 @@
   </head>
   <body>
 
-  <canvas id="theCanvas" width="400px" height="400px" onload="main();" style="border:black medium solid">
+  <canvas id="theCanvas" width="300px" height="300px" onload="main();" style="border:black medium solid">
       Canvas not supported.
   </canvas>
   <canvas id="canvas2" width="200px" height="200px" onload="main();" style="border:black medium solid">
+      Canvas not supported.  	
+  </canvas>
+    <canvas id="canvas3" width="200px" height="400px" onload="main();" style="border:black medium solid">
+      Canvas not supported.  	
+  </canvas>
+    <canvas id="canvas4" width="400px" height="200px" onload="main();" style="border:black medium solid">
       Canvas not supported.  	
   </canvas>
   <script type="text/javascript">
@@ -18,23 +24,29 @@
 	var graphConfiguration = { 
 		"verticalMin": -100, "verticalMax": 100, 
 		"horizontalMin": -100, "horizontalMax": 100,
-		"horizontalTickIncrement":15, "verticalTickIncrement":10
+		"horizontalTickIncrement":25, "verticalTickIncrement":10
 		};
-	
 	graphs_config(graphConfiguration);
-	
-    graphs_applyToCanvas("theCanvas");
+	graphs_applyToCanvas("theCanvas");
     
 	graphConfiguration = { 
 		"verticalMin": -15, "verticalMax": 100, 
 		"horizontalMin": -100, "horizontalMax": 100,
 		"horizontalTickIncrement":10, "verticalTickIncrement":10
 		};
-	
 	graphs_config(graphConfiguration);
+	graphs_applyToCanvas("canvas2");
 	
-    graphs_applyToCanvas("canvas2");
+	graphConfiguration = { 
+		"verticalMin": -1, "verticalMax": 100, 
+		"horizontalMin": -100, "horizontalMax": 10,
+		"horizontalTickIncrement":10, "verticalTickIncrement":10
+		};
+		
+	graphs_configAndApply(graphConfiguration, "canvas3");
+	graphs_configAndApply(graphConfiguration, "canvas4");
 	
+		
    </script>
 
   </body>

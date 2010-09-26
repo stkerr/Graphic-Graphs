@@ -17,6 +17,17 @@ var verticalTickIncrement;
 var horizontalTickIncrement;
 
 /*
+ * Description: Using the given configuration settings, configures and applies them to the given canvas
+ * Prerequisites: The configuration object and the canvas ID are both valid
+ * Arguments: configurationObject - the configuraiton settings, canvasID - the ID of the canvas object
+ */
+function graphs_configAndApply(configurationObject, canvasID)
+{
+	graphs_config(configurationObject);
+	graphs_applyToCanvas(canvasID);
+}
+
+/*
  * Description: Using the specified JSON object, configures the graph system
  * Prerequisites: None.
  * Arguments: configurationObject - A JSON object detailing the graph parameters
@@ -35,7 +46,7 @@ function graphs_config(configurationObject)
 /*
  * Description: A function used internally to set up some helper variables
  */
-function graphs_internalCaluclation()
+function graphs_internalCalculation()
 {
 }
 
@@ -66,17 +77,17 @@ function graphs_applyToCanvas(graphId)
 	else
 		totalHeight = Math.abs(verticalMin) + verticalMax ;
 
-	// calculate the scale factor between the physical canvas and the desired dimensions
+	/* calculate the scale factor between the physical canvas and the desired dimensions */
 	verticalScaleFactor = canvas.height / totalHeight;
 		
-	// calculate the scale factor between the physical canvas and the desired dimensions
+	/* calculate the scale factor between the physical canvas and the desired dimensions */
 	horizontalScaleFactor = canvas.width / totalWidth;
 	
-	/* Calculate the axis line coordinates - Uses the minimum as a relative offset to the axis*/
+	/* Calculate the axis line coordinates - Uses the minimum as a relative offset to the axis */
 	var horizontalLineCoordinate = Math.abs(verticalMin);
 	var verticalLineCoordinate = Math.abs(horizontalMin);
 	
-	// draw horizontal axis
+	/* draw horizontal axis */
 	if(verticalMin <= 0 && verticalMax >= 0)
 	{		
 		// draw the actual axis
@@ -84,15 +95,15 @@ function graphs_applyToCanvas(graphId)
 		context.lineTo(canvas.width, horizontalLineCoordinate * verticalScaleFactor);
 		context.stroke();
 		
-		// draw ticks on X axis
-		for(i = 0; i < verticalMax*2; i=i+verticalTickIncrement)
+		/* draw ticks on X axis */
+		for(i = 0; i < Math.max(verticalMax,Math.abs(verticalMin))*2; i=i+verticalTickIncrement)
 		{
-			context.moveTo((verticalLineCoordinate+i)*horizontalScaleFactor, (horizontalLineCoordinate+2) * verticalScaleFactor);
-			context.lineTo((verticalLineCoordinate+i)*horizontalScaleFactor, (horizontalLineCoordinate-2) * verticalScaleFactor);
+			context.moveTo((verticalLineCoordinate+2)*horizontalScaleFactor, (horizontalLineCoordinate+i) * verticalScaleFactor);
+			context.lineTo((verticalLineCoordinate-2)*horizontalScaleFactor, (horizontalLineCoordinate+i) * verticalScaleFactor);
 			context.stroke();
 			
-			context.moveTo((verticalLineCoordinate-i)*horizontalScaleFactor, (horizontalLineCoordinate+2) * verticalScaleFactor);
-			context.lineTo((verticalLineCoordinate-i)*horizontalScaleFactor, (horizontalLineCoordinate-2) * verticalScaleFactor);
+			context.moveTo((verticalLineCoordinate+2)*horizontalScaleFactor, (horizontalLineCoordinate-i) * verticalScaleFactor);
+			context.lineTo((verticalLineCoordinate-2)*horizontalScaleFactor, (horizontalLineCoordinate-i) * verticalScaleFactor);
 			context.stroke();
 		}
 	}
@@ -100,7 +111,7 @@ function graphs_applyToCanvas(graphId)
 	{
 	}
 	
-	// draw vertical axis
+	/* draw vertical axis */
 	if(horizontalMin <= 0 && horizontalMax >= 0)
 	{				
 		// draw the actual axis
@@ -108,25 +119,36 @@ function graphs_applyToCanvas(graphId)
 		context.lineTo(verticalLineCoordinate * horizontalScaleFactor,canvas.height);
 		context.stroke();
 		
-		// draw ticks on Y axis
-		for(i = 0; i < horizontalMax*2; i=i+horizontalTickIncrement)
+		/* draw ticks on Y axis */
+		for(i = 0; i < Math.max(horizontalMax, Math.abs(horizontalMin))*2; i=i+horizontalTickIncrement)
 		{
-			// draw a tick on the positive side
-			context.moveTo((verticalLineCoordinate+2) * horizontalScaleFactor, (horizontalLineCoordinate + i) * verticalScaleFactor);
-			context.lineTo((verticalLineCoordinate-2) * horizontalScaleFactor, (horizontalLineCoordinate + i) * verticalScaleFactor);			
+			/* draw a tick on the positive side */
+			
+			context.moveTo((verticalLineCoordinate+i) * horizontalScaleFactor, (horizontalLineCoordinate + 2) * verticalScaleFactor);
+			context.lineTo((verticalLineCoordinate+i) * horizontalScaleFactor, (horizontalLineCoordinate - 2) * verticalScaleFactor);			
 			context.stroke();
 			
-			context.moveTo((verticalLineCoordinate+2) * horizontalScaleFactor, (horizontalLineCoordinate - i) * verticalScaleFactor);
-			context.lineTo((verticalLineCoordinate-2) * horizontalScaleFactor, (horizontalLineCoordinate - i) * verticalScaleFactor);			
+			context.moveTo((verticalLineCoordinate-i) * horizontalScaleFactor, (horizontalLineCoordinate + 2) * verticalScaleFactor);
+			context.lineTo((verticalLineCoordinate-i) * horizontalScaleFactor, (horizontalLineCoordinate - 2) * verticalScaleFactor);			
 			context.stroke();
+						
+			/*
+			context.moveTo((horizontalLineCoordinate+2) * horizontalScaleFactor, (verticalLineCoordinate + i) * verticalScaleFactor);
+			context.lineTo((horizontalLineCoordinate-2) * horizontalScaleFactor, (verticalLineCoordinate + i) * verticalScaleFactor);			
+			context.stroke();
+			
+			context.moveTo((horizontalLineCoordinate+2) * horizontalScaleFactor, (verticalLineCoordinate - i) * verticalScaleFactor);
+			context.lineTo((horizontalLineCoordinate-2) * horizontalScaleFactor, (verticalLineCoordinate - i) * verticalScaleFactor);			
+			context.stroke();
+			*/
+			
+
+			
 		}
 	}
 	else
 	{
 	}
-	
-	
-	// perform the actual drawing now
 
 }
 
