@@ -49,9 +49,6 @@ function graphs_drawPoint(x,y, canvasID)
 	
 	graphs_internalConfiguration(canvas);
 		
-	/* Flip the vertical coordinates */
-	//y = totalHeight - y;
-	
 	context.beginPath();
 	context.arc((x + verticalLineCoordinate) * horizontalScaleFactor ,  (horizontalLineCoordinate - y) * verticalScaleFactor, 5, 0, Math.PI * 2, false);
 	context.stroke();
@@ -114,16 +111,16 @@ function graphs_applyToCanvas(graphId)
 		context.stroke();
 		
 		/* draw ticks on X axis */
-		for(i = 0; i < Math.max(verticalMax,Math.abs(verticalMin))*2; i=i+verticalTickIncrement)
+		for(i = 0; i < Math.max(horizontalMax,Math.abs(horizontalMin))*2; i=i+horizontalTickIncrement)
 		{
 			context.beginPath();
 			
-			context.moveTo((verticalLineCoordinate+2)*horizontalScaleFactor, (horizontalLineCoordinate+i) * verticalScaleFactor);
-			context.lineTo((verticalLineCoordinate-2)*horizontalScaleFactor, (horizontalLineCoordinate+i) * verticalScaleFactor);
+			context.moveTo((verticalLineCoordinate+i)*horizontalScaleFactor, horizontalLineCoordinate * verticalScaleFactor + 2);
+			context.lineTo((verticalLineCoordinate+i)*horizontalScaleFactor, horizontalLineCoordinate * verticalScaleFactor - 2);
 			context.stroke();
 			
-			context.moveTo((verticalLineCoordinate+2)*horizontalScaleFactor, (horizontalLineCoordinate-i) * verticalScaleFactor);
-			context.lineTo((verticalLineCoordinate-2)*horizontalScaleFactor, (horizontalLineCoordinate-i) * verticalScaleFactor);
+			context.moveTo((verticalLineCoordinate-i)*horizontalScaleFactor, horizontalLineCoordinate * verticalScaleFactor + 2);
+			context.lineTo((verticalLineCoordinate-i)*horizontalScaleFactor, horizontalLineCoordinate * verticalScaleFactor - 2);
 			context.stroke();
 			context.closePath();
 		}
@@ -141,16 +138,17 @@ function graphs_applyToCanvas(graphId)
 		context.stroke();
 		
 		/* draw ticks on Y axis */
-		for(i = 0; i < Math.max(horizontalMax, Math.abs(horizontalMin))*2; i=i+horizontalTickIncrement)
+		for(i = 0; i < Math.max(verticalMax, Math.abs(verticalMin))*2; i=i+verticalTickIncrement)
 		{
 			/* draw a tick on the positive side */
 			context.beginPath();
-			context.moveTo((verticalLineCoordinate+i) * horizontalScaleFactor, (horizontalLineCoordinate + 2) * verticalScaleFactor);
-			context.lineTo((verticalLineCoordinate+i) * horizontalScaleFactor, (horizontalLineCoordinate - 2) * verticalScaleFactor);			
+			context.moveTo((verticalLineCoordinate) * horizontalScaleFactor + 2, (horizontalLineCoordinate + i) * verticalScaleFactor);
+			context.lineTo((verticalLineCoordinate) * horizontalScaleFactor - 2, (horizontalLineCoordinate + i) * verticalScaleFactor);
 			context.stroke();
+
 			
-			context.moveTo((verticalLineCoordinate-i) * horizontalScaleFactor, (horizontalLineCoordinate + 2) * verticalScaleFactor);
-			context.lineTo((verticalLineCoordinate-i) * horizontalScaleFactor, (horizontalLineCoordinate - 2) * verticalScaleFactor);			
+			context.moveTo((verticalLineCoordinate) * horizontalScaleFactor + 2, (horizontalLineCoordinate - i) * verticalScaleFactor);			
+			context.lineTo((verticalLineCoordinate) * horizontalScaleFactor - 2, (horizontalLineCoordinate - i) * verticalScaleFactor);			
 			context.stroke();	
 			context.closePath();
 		}
@@ -182,6 +180,11 @@ function graphs_configAndApply(configurationObject, canvasID)
 	graphs_applyToCanvas(canvasID);
 }
 
+/*
+ * Description: An internal function used to configure globals before certain operations take place.
+ * Prerequisites: Not being called by the user, but by another function
+ * Arguments: None
+ */
 function graphs_internalConfiguration(canvas)
 {
 	/* Calculate the total relative width */
@@ -209,6 +212,4 @@ function graphs_internalConfiguration(canvas)
 	/* Calculate the axis line coordinates - Uses the minimum as a relative offset to the axis */
 	horizontalLineCoordinate = totalHeight - Math.abs(verticalMin);
 	verticalLineCoordinate = Math.abs(horizontalMin);
-	
-	
 }

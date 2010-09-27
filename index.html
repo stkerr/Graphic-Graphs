@@ -7,16 +7,28 @@
   </head>
   <body>
 
+  <p>This is a basic example of Graphic-Graphs on a &lt;canvas&gt; element.</p>
   <canvas id="canvas1" width="300px" height="300px" onload="main();" style="border:black medium solid">
       Canvas not supported.
   </canvas>
   <canvas id="canvas2" width="200px" height="200px" onload="main();" style="border:black medium solid">
       Canvas not supported.  	
   </canvas>
+
+  <p>These two &lt;canvas&gt; elements use the same configuration object. Notice that the graphs are scaled properly based on the size of the &lt;canvas&gt; object.
+  </p>
     <canvas id="canvas3" width="200px" height="300px" onload="main();" style="border:black medium solid">
       Canvas not supported.  	
   </canvas>
     <canvas id="canvas4" width="400px" height="200px" onload="main();" style="border:black medium solid">
+      Canvas not supported.  	
+  </canvas>
+
+    <p>Here are some examples where the axes should not be shown on the graph. These graphs are graphing y=x^2. </p>
+    <canvas id="canvas5" width="200px" height="200px" onload="main();" style="border:black medium solid">
+      Canvas not supported.  	
+  </canvas>
+    <canvas id="canvas6" width="200px" height="200px" onload="main();" style="border:black medium solid">
       Canvas not supported.  	
   </canvas>
   <script type="text/javascript">
@@ -50,7 +62,7 @@
 	graphs_applyToCanvas("canvas2");
 	
 	graphs_drawDataSet_Lines(dataPoints, "canvas2");
-	graphs_drawPoint(-50,-10,"canvas2");
+	graphs_drawPoint(-50,30,"canvas2");
 	graphs_drawLine(20,20,40,40, "canvas2");
 		
 	graphConfiguration = { 
@@ -80,6 +92,23 @@
 	graphs_drawPoint(-50,25,"canvas3");
 	graphs_drawLine(-20,20,-40,40, "canvas3");
 	
+	graphConfiguration = { 
+		"verticalMin": 1, "verticalMax": 200, 
+		"horizontalMin": 1, "horizontalMax": 10,
+		"horizontalTickIncrement":10, "verticalTickIncrement":10
+		};
+		
+	graphs_configAndApply(graphConfiguration, "canvas5");
+	graphs_drawDataSet_Lines(dataPoints, "canvas5");
+
+	graphConfiguration = { 
+		"verticalMin": 1, "verticalMax": 200, 
+		"horizontalMin": -10, "horizontalMax": 10,
+		"horizontalTickIncrement":10, "verticalTickIncrement":10
+		};
+
+	graphs_configAndApply(graphConfiguration, "canvas6");
+	graphs_drawDataSet_Lines(dataPoints, "canvas6");
    </script>
 
   </body>
