@@ -7,13 +7,13 @@
   </head>
   <body>
 
-  <canvas id="theCanvas" width="300px" height="300px" onload="main();" style="border:black medium solid">
+  <canvas id="canvas1" width="300px" height="300px" onload="main();" style="border:black medium solid">
       Canvas not supported.
   </canvas>
   <canvas id="canvas2" width="200px" height="200px" onload="main();" style="border:black medium solid">
       Canvas not supported.  	
   </canvas>
-    <canvas id="canvas3" width="200px" height="400px" onload="main();" style="border:black medium solid">
+    <canvas id="canvas3" width="200px" height="300px" onload="main();" style="border:black medium solid">
       Canvas not supported.  	
   </canvas>
     <canvas id="canvas4" width="400px" height="200px" onload="main();" style="border:black medium solid">
@@ -21,14 +21,26 @@
   </canvas>
   <script type="text/javascript">
     
+	var dataPoints = [];
+	for(var i = -10; i < 10; i=i+0.01)
+	{
+		var obj = [i, i*i];
+		dataPoints.push(obj);
+	}
+	
 	var graphConfiguration = { 
 		"verticalMin": -100, "verticalMax": 100, 
 		"horizontalMin": -100, "horizontalMax": 100,
 		"horizontalTickIncrement":25, "verticalTickIncrement":10
 		};
+		
 	graphs_config(graphConfiguration);
-	graphs_applyToCanvas("theCanvas");
+	graphs_applyToCanvas("canvas1");
     
+	graphs_drawDataSet_Lines(dataPoints, "canvas1");
+	graphs_drawPoint(-50,30,"canvas1");
+	graphs_drawLine(20,20,40,40, "canvas1");
+	
 	graphConfiguration = { 
 		"verticalMin": -15, "verticalMax": 100, 
 		"horizontalMin": -100, "horizontalMax": 100,
@@ -37,6 +49,10 @@
 	graphs_config(graphConfiguration);
 	graphs_applyToCanvas("canvas2");
 	
+	graphs_drawDataSet_Lines(dataPoints, "canvas2");
+	graphs_drawPoint(-50,-10,"canvas2");
+	graphs_drawLine(20,20,40,40, "canvas2");
+		
 	graphConfiguration = { 
 		"verticalMin": -1, "verticalMax": 100, 
 		"horizontalMin": -100, "horizontalMax": 10,
@@ -46,7 +62,24 @@
 	graphs_configAndApply(graphConfiguration, "canvas3");
 	graphs_configAndApply(graphConfiguration, "canvas4");
 	
-		
+	
+	dataPoints = [ [0,0], [-50,30], [-75,15] ];
+	
+	var dataPoints = [];
+	for(var i = -10; i < 10; i=i+0.01)
+	{
+		var obj = [i, i*i];
+		dataPoints.push(obj);
+
+	}
+	graphs_drawDataSet_Lines(dataPoints, "canvas4");
+	graphs_drawPoint(-50,50,"canvas4");
+	graphs_drawLine(-20,20,-40,40, "canvas4");
+	
+	graphs_drawDataSet_Lines(dataPoints, "canvas3");
+	graphs_drawPoint(-50,25,"canvas3");
+	graphs_drawLine(-20,20,-40,40, "canvas3");
+	
    </script>
 
   </body>

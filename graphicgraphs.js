@@ -16,16 +16,9 @@ var horizontalScaleFactor;
 var verticalTickIncrement;
 var horizontalTickIncrement;
 
-/*
- * Description: Using the given configuration settings, configures and applies them to the given canvas
- * Prerequisites: The configuration object and the canvas ID are both valid
- * Arguments: configurationObject - the configuraiton settings, canvasID - the ID of the canvas object
- */
-function graphs_configAndApply(configurationObject, canvasID)
-{
-	graphs_config(configurationObject);
-	graphs_applyToCanvas(canvasID);
-}
+var horizontalLineCoordinate;
+var verticalLineCoordinate;
+
 
 /*
  * Description: Using the specified JSON object, configures the graph system
@@ -34,6 +27,7 @@ function graphs_configAndApply(configurationObject, canvasID)
  */
 function graphs_config(configurationObject)
 {
+	/* Perform the mapping from the configuration object to the internal objects */
 	verticalMin 	= configurationObject.verticalMin;
 	verticalMax 	= configurationObject.verticalMax;
 	verticalTickIncrement 	= configurationObject.verticalTickIncrement;
@@ -44,10 +38,59 @@ function graphs_config(configurationObject)
 }
 
 /*
- * Description: A function used internally to set up some helper variables
+ * Description: Draws a point on the given canvas
+ * Prerequisite: (x,y) is a valid point and the canvas is valid
+ * Arguments: (x, y) - the relative coordinates of the point, canvasID - the ID of the canvas
  */
-function graphs_internalCalculation()
+function graphs_drawPoint(x,y, canvasID)
 {
+    var canvas = document.getElementById(canvasID);
+    var context = canvas.getContext('2d');
+	
+	graphs_internalConfiguration(canvas);
+		
+	/* Flip the vertical coordinates */
+	//y = totalHeight - y;
+	
+	context.beginPath();
+	context.arc((x + verticalLineCoordinate) * horizontalScaleFactor ,  (horizontalLineCoordinate - y) * verticalScaleFactor, 5, 0, Math.PI * 2, false);
+	context.stroke();
+	context.fill();
+	context.closePath();
+}
+
+
+/*
+ * Description: Draws a line on the given canvas
+ * Prerequisite: (x1,y1) & (x2,y2) are valid points and the canvas is valid
+ * Arguments: (x1,y1) & (x2,y2) - the relative coordinates of the line, canvasID - the ID of the canvas
+ */
+function graphs_drawLine(x1,y1,x2,y2,canvasID)
+{
+    var canvas = document.getElementById(canvasID);
+    var context = canvas.getContext('2d');
+	
+	graphs_internalConfiguration(canvas);
+		
+	/* Start from the top-left point. */
+	context.beginPath();
+	context.moveTo((x1 + verticalLineCoordinate) * horizontalScaleFactor, (horizontalLineCoordinate - y1) * verticalScaleFactor);
+	context.lineTo((x2 + verticalLineCoordinate) * horizontalScaleFactor, (horizontalLineCoordinate - y2) * verticalScaleFactor);
+	context.stroke();
+	context.closePath();
+}
+
+/*
+ * Description: Given a set of data points, draws lines between all of them
+ * Prerequisites: The data points are valid (x,y) coordinates and the canvas is valid
+ * ARguments: dataPoints - an array of (x,y) coordinates, canvasID - the canvas to draw on
+ */
+function graphs_drawDataSet_Lines(dataPoints, canvasID)
+{	
+	for(var i = 0; i < dataPoints.length-1; i++)
+	{
+		graphs_drawLine(dataPoints[i][0],dataPoints[i][1],dataPoints[i+1][0], dataPoints[i+1][1],canvasID);
+	}
 }
 
 /*
@@ -59,45 +102,22 @@ function graphs_applyToCanvas(graphId)
 {
     var canvas = document.getElementById(graphId);
     var context = canvas.getContext('2d');
-	
-	/* Calculate the total relative width */
-	var totalWidth;
-	if(horizontalMax < 0)
-		totalWidth = Math.abs(horizontalMin) - Math.abs(horizontalMax);
-	else if(horizontalMin > 0)
-		totalWidth = horizontalMax - horizontalMin;
-	else
-		totalWidth = Math.abs(horizontalMin) + horizontalMax;
-	
-	/* Calculate the total relative height */
-	if(verticalMax < 0)
-		totalHeight = Math.abs(verticalMin) - Math.abs(verticalMax );
-	else if(horizontalMin > 0)
-		totalHeight = verticalMax  - verticalMin;
-	else
-		totalHeight = Math.abs(verticalMin) + verticalMax ;
-
-	/* calculate the scale factor between the physical canvas and the desired dimensions */
-	verticalScaleFactor = canvas.height / totalHeight;
 		
-	/* calculate the scale factor between the physical canvas and the desired dimensions */
-	horizontalScaleFactor = canvas.width / totalWidth;
-	
-	/* Calculate the axis line coordinates - Uses the minimum as a relative offset to the axis */
-	var horizontalLineCoordinate = Math.abs(verticalMin);
-	var verticalLineCoordinate = Math.abs(horizontalMin);
+	graphs_internalConfiguration(canvas);
 	
 	/* draw horizontal axis */
 	if(verticalMin <= 0 && verticalMax >= 0)
 	{		
 		// draw the actual axis
-		context.moveTo(0, horizontalLineCoordinate * verticalScaleFactor);
-		context.lineTo(canvas.width, horizontalLineCoordinate * verticalScaleFactor);
+		context.moveTo(0, 				horizontalLineCoordinate * verticalScaleFactor);
+		context.lineTo(canvas.width, 	horizontalLineCoordinate * verticalScaleFactor);
 		context.stroke();
 		
 		/* draw ticks on X axis */
 		for(i = 0; i < Math.max(verticalMax,Math.abs(verticalMin))*2; i=i+verticalTickIncrement)
 		{
+			context.beginPath();
+			
 			context.moveTo((verticalLineCoordinate+2)*horizontalScaleFactor, (horizontalLineCoordinate+i) * verticalScaleFactor);
 			context.lineTo((verticalLineCoordinate-2)*horizontalScaleFactor, (horizontalLineCoordinate+i) * verticalScaleFactor);
 			context.stroke();
@@ -105,6 +125,7 @@ function graphs_applyToCanvas(graphId)
 			context.moveTo((verticalLineCoordinate+2)*horizontalScaleFactor, (horizontalLineCoordinate-i) * verticalScaleFactor);
 			context.lineTo((verticalLineCoordinate-2)*horizontalScaleFactor, (horizontalLineCoordinate-i) * verticalScaleFactor);
 			context.stroke();
+			context.closePath();
 		}
 	}
 	else
@@ -123,33 +144,20 @@ function graphs_applyToCanvas(graphId)
 		for(i = 0; i < Math.max(horizontalMax, Math.abs(horizontalMin))*2; i=i+horizontalTickIncrement)
 		{
 			/* draw a tick on the positive side */
-			
+			context.beginPath();
 			context.moveTo((verticalLineCoordinate+i) * horizontalScaleFactor, (horizontalLineCoordinate + 2) * verticalScaleFactor);
 			context.lineTo((verticalLineCoordinate+i) * horizontalScaleFactor, (horizontalLineCoordinate - 2) * verticalScaleFactor);			
 			context.stroke();
 			
 			context.moveTo((verticalLineCoordinate-i) * horizontalScaleFactor, (horizontalLineCoordinate + 2) * verticalScaleFactor);
 			context.lineTo((verticalLineCoordinate-i) * horizontalScaleFactor, (horizontalLineCoordinate - 2) * verticalScaleFactor);			
-			context.stroke();
-						
-			/*
-			context.moveTo((horizontalLineCoordinate+2) * horizontalScaleFactor, (verticalLineCoordinate + i) * verticalScaleFactor);
-			context.lineTo((horizontalLineCoordinate-2) * horizontalScaleFactor, (verticalLineCoordinate + i) * verticalScaleFactor);			
-			context.stroke();
-			
-			context.moveTo((horizontalLineCoordinate+2) * horizontalScaleFactor, (verticalLineCoordinate - i) * verticalScaleFactor);
-			context.lineTo((horizontalLineCoordinate-2) * horizontalScaleFactor, (verticalLineCoordinate - i) * verticalScaleFactor);			
-			context.stroke();
-			*/
-			
-
-			
+			context.stroke();	
+			context.closePath();
 		}
 	}
 	else
 	{
 	}
-
 }
 
 /*
@@ -161,4 +169,46 @@ function graphs_resetCanvas(graphId)
 {
 	var canvas = document.getElementById(graphId);
 	canvas.width = canvas.width;
+}
+
+/*
+ * Description: Using the given configuration settings, configures and applies them to the given canvas
+ * Prerequisites: The configuration object and the canvas ID are both valid
+ * Arguments: configurationObject - the configuraiton settings, canvasID - the ID of the canvas object
+ */
+function graphs_configAndApply(configurationObject, canvasID)
+{
+	graphs_config(configurationObject);
+	graphs_applyToCanvas(canvasID);
+}
+
+function graphs_internalConfiguration(canvas)
+{
+	/* Calculate the total relative width */
+	if(horizontalMax < 0)
+		totalWidth = Math.abs(horizontalMin) - Math.abs(horizontalMax);
+	else if(horizontalMin > 0)
+		totalWidth = horizontalMax - horizontalMin;
+	else
+		totalWidth = Math.abs(horizontalMin) + horizontalMax;
+	
+	/* Calculate the total relative height */
+	if(verticalMax < 0)
+		totalHeight = Math.abs(verticalMin) - Math.abs(verticalMax);
+	else if(horizontalMin > 0)
+		totalHeight = verticalMax  - verticalMin;
+	else
+		totalHeight = Math.abs(verticalMin) + verticalMax;
+		
+	/* calculate the scale factor between the physical canvas and the desired dimensions */
+	verticalScaleFactor = canvas.height / totalHeight;
+		
+	/* calculate the scale factor between the physical canvas and the desired dimensions */
+	horizontalScaleFactor = canvas.width / totalWidth;
+	
+	/* Calculate the axis line coordinates - Uses the minimum as a relative offset to the axis */
+	horizontalLineCoordinate = totalHeight - Math.abs(verticalMin);
+	verticalLineCoordinate = Math.abs(horizontalMin);
+	
+	
 }
