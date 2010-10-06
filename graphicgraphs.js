@@ -48,7 +48,11 @@ function graphs_drawPoint(x,y, canvasID)
     var context = canvas.getContext('2d');
 	
 	graphs_internalConfiguration(canvas);
-		
+	
+    if(x < horizontalMin || x > horizontalMax
+        || y < verticalMin || y > verticalMax)
+        return;
+
 	context.beginPath();
 	context.arc((x + verticalLineCoordinate) * horizontalScaleFactor ,  (horizontalLineCoordinate - y) * verticalScaleFactor, 5, 0, Math.PI * 2, false);
 	context.stroke();
@@ -68,11 +72,18 @@ function graphs_drawLine(x1,y1,x2,y2,canvasID)
     var context = canvas.getContext('2d');
 	
 	graphs_internalConfiguration(canvas);
-		
+/*		
+    if(x1 < horizontalMin || x1 > horizontalMax
+        || y1 < verticalMin || y1 > verticalMax)
+        return;
+    if(x2 < horizontalMin || x2 > horizontalMax
+        || y2 < verticalMin || y2 > verticalMax)
+        return;
+*/
 	/* Start from the top-left point. */
 	context.beginPath();
-	context.moveTo((x1 + verticalLineCoordinate) * horizontalScaleFactor, (horizontalLineCoordinate - y1) * verticalScaleFactor);
-	context.lineTo((x2 + verticalLineCoordinate) * horizontalScaleFactor, (horizontalLineCoordinate - y2) * verticalScaleFactor);
+	context.moveTo((x1 - horizontalMin) * horizontalScaleFactor, (totalHeight-(y1 - verticalMin)) * verticalScaleFactor);
+	context.lineTo((x2 - horizontalMin) * horizontalScaleFactor, (totalHeight-(y2 - verticalMin)) * verticalScaleFactor);
 	context.stroke();
 	context.closePath();
 }
@@ -105,7 +116,7 @@ function graphs_applyToCanvas(graphId)
 	/* draw horizontal axis */
 	if(verticalMin <= 0 && verticalMax >= 0)
 	{		
-		// draw the actual axis
+		/* draw the actual axis */
 		context.moveTo(0, 				horizontalLineCoordinate * verticalScaleFactor);
 		context.lineTo(canvas.width, 	horizontalLineCoordinate * verticalScaleFactor);
 		context.stroke();
@@ -142,13 +153,13 @@ function graphs_applyToCanvas(graphId)
 		{
 			/* draw a tick on the positive side */
 			context.beginPath();
-			context.moveTo((verticalLineCoordinate) * horizontalScaleFactor + 2, (horizontalLineCoordinate + i) * verticalScaleFactor);
-			context.lineTo((verticalLineCoordinate) * horizontalScaleFactor - 2, (horizontalLineCoordinate + i) * verticalScaleFactor);
+			context.moveTo(verticalLineCoordinate * horizontalScaleFactor + 2, (horizontalLineCoordinate + i) * verticalScaleFactor);
+			context.lineTo(verticalLineCoordinate * horizontalScaleFactor - 2, (horizontalLineCoordinate + i) * verticalScaleFactor);
 			context.stroke();
 
 			
-			context.moveTo((verticalLineCoordinate) * horizontalScaleFactor + 2, (horizontalLineCoordinate - i) * verticalScaleFactor);			
-			context.lineTo((verticalLineCoordinate) * horizontalScaleFactor - 2, (horizontalLineCoordinate - i) * verticalScaleFactor);			
+			context.moveTo(verticalLineCoordinate * horizontalScaleFactor + 2, (horizontalLineCoordinate - i) * verticalScaleFactor);			
+			context.lineTo(verticalLineCoordinate * horizontalScaleFactor - 2, (horizontalLineCoordinate - i) * verticalScaleFactor);			
 			context.stroke();	
 			context.closePath();
 		}
@@ -210,6 +221,17 @@ function graphs_internalConfiguration(canvas)
 	horizontalScaleFactor = canvas.width / totalWidth;
 	
 	/* Calculate the axis line coordinates - Uses the minimum as a relative offset to the axis */
-	horizontalLineCoordinate = totalHeight - Math.abs(verticalMin);
-	verticalLineCoordinate = Math.abs(horizontalMin);
+    if(horizontalMin < 0 && horizontalMax > 0)
+        horizontalLineCoordinate = totalHeight - Math.abs(verticalMin);
+    else if(horizontalMin > 0)
+        horizontalLineCoordinate = verticalMax;
+    else
+        horizontalLineCoordiante = verticalMin;
+
+    if(verticalMin < 0 && verticalMax > 0)
+        verticalLineCoordinate = Math.abs(horizontalMin);
+    else if(verticalMin > 0)
+        verticalLineCoordinate = horizontalMax;
+    else
+        verticalLineCoordinate = horizontalMin;
 }
