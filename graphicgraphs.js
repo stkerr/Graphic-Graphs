@@ -114,6 +114,7 @@ function graphs_applyToCanvas(graphId)
 	graphs_internalConfiguration(canvas);
 	
 	/* draw horizontal axis */
+
 	if(verticalMin <= 0 && verticalMax >= 0)
 	{		
 		/* draw the actual axis */
@@ -226,12 +227,12 @@ function graphs_internalConfiguration(canvas)
     else if(horizontalMin > 0)
         horizontalLineCoordinate = verticalMax;
     else
-        horizontalLineCoordiante = verticalMin;
+        horizontalLineCoordiante = Math.abs(verticalMin);
 
     if(verticalMin < 0 && verticalMax > 0)
         verticalLineCoordinate = Math.abs(horizontalMin);
     else if(verticalMin > 0)
         verticalLineCoordinate = horizontalMax;
     else
-        verticalLineCoordinate = horizontalMin;
+        verticalLineCoordinate = Math.abs(horizontalMin);
 }

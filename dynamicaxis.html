@@ -1,0 +1,45 @@
+<!DOCTYPE html />
+<html>
+<head>
+    <title>Graphic Graphs Dynamic Axis Example</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="graphicgraphs.js"></script>
+</head>
+
+<body onLoad="updateCanvas()">
+
+    <canvas id="canvas1" width="200px" height="200px" style="border:black medium solid">
+        Canvas not supported.
+    </canvas>
+
+    <form>
+        Vertical Minimum: &nbsp;&nbsp;&nbsp;&nbsp;  <input type="range" id="vertMin"    min="-100" max="100" value="-10"    onChange = "updateCanvas()" /> <p id="para1"></p>
+        Vertical Maximum: &nbsp;&nbsp;&nbsp;        <input type="range" id="vertMax"    min="-100" max="100" value="10"     onChange = "updateCanvas()" /> <p id="para2"></p>
+        Horizontal Minimum: &nbsp;                  <input type="range" id="horizMin"   min="-100" max="100" value="-10"    onChange = "updateCanvas()" /> <p id="para3"></p>
+        Horizontal Maximum:                         <input type="range" id="horizMax"   min="-100" max="100" value="10"     onChange = "updateCanvas()" /> <p id="para4"></p>
+    </form>
+
+    <script>
+        function updateCanvas()
+        {
+            document.getElementById("para1").innerHTML = parseInt(document.getElementById("vertMin").value);
+            document.getElementById("para2").innerHTML = parseInt(document.getElementById("vertMax").value);
+            document.getElementById("para3").innerHTML = parseInt(document.getElementById("horizMin").value);
+            document.getElementById("para4").innerHTML = parseInt(document.getElementById("horizMax").value);
+
+            graphs_resetCanvas("canvas1");
+            graphConfiguration = { 
+                "verticalMin": parseInt(document.getElementById("vertMin").value), 
+                "verticalMax": parseInt(document.getElementById("vertMax").value), 
+                "horizontalMin": parseInt(document.getElementById("horizMin").value),
+                "horizontalMax": parseInt(document.getElementById("horizMax").value),
+                "horizontalTickIncrement":10, "verticalTickIncrement":10
+                };
+
+            graphs_configAndApply(graphConfiguration, "canvas1");
+
+        }
+    </script>
+</body>
+
+</html>

@@ -7,6 +7,7 @@
   </head>
   <body>
 
+<p>Try the dynamic axis control demo <a href="dynamicaxis.html">here</a></p>
   <p>This is a basic example of Graphic-Graphs on a &lt;canvas&gt; element.</p>
   <canvas id="canvas1" width="300px" height="300px" onload="main();" style="border:black medium solid">
       Canvas not supported.
@@ -31,6 +32,13 @@
     <canvas id="canvas6" width="200px" height="200px" onload="main();" style="border:black medium solid">
       Canvas not supported.  	
   </canvas>
+    <canvas id="canvas7" width="200px" height="200px" onload="main();" style="border:black medium solid">
+      Canvas not supported.  	
+  </canvas>
+    <canvas id="canvas8" width="200px" height="200px" onload="main();" style="border:black medium solid">
+      Canvas not supported.  	
+  </canvas>
+
   <script type="text/javascript">
     
 	var dataPoints = [];
@@ -109,6 +117,26 @@
 
 	graphs_configAndApply(graphConfiguration, "canvas6");
 	graphs_drawDataSet_Lines(dataPoints, "canvas6");
+
+
+	graphConfiguration = { 
+		"verticalMin": -50, "verticalMax": -10, 
+		"horizontalMin": -10, "horizontalMax": 100,
+		"horizontalTickIncrement":10, "verticalTickIncrement":10
+		};
+
+	graphs_configAndApply(graphConfiguration, "canvas7");
+	graphs_drawDataSet_Lines(dataPoints, "canvas7");
+
+	graphConfiguration = { 
+		"verticalMin": -50, "verticalMax": 100, 
+		"horizontalMin": -10, "horizontalMax": -5,
+		"horizontalTickIncrement":10, "verticalTickIncrement":10
+		};
+
+	graphs_configAndApply(graphConfiguration, "canvas8");
+	graphs_drawDataSet_Lines(dataPoints, "canvas8");
+
    </script>
 
   </body>
