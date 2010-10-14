@@ -101,6 +101,14 @@ function graphs_drawDataSet_Lines(dataPoints, canvasID)
 	}
 }
 
+function graphs_drawDataSet_Points(dataPoints, canvasID)
+{
+	for(var i = 0; i < dataPoints.length; i++)
+	{
+		graphs_drawPoint(dataPoints[i][0],dataPoints[i][1],canvasID);
+	}
+}
+
 /*
  * Description: Using the current configuration, applies the graph stylings to the given canvas
  * Prerequisites: The configuration information is already set up and graphId is a valid canvas element
