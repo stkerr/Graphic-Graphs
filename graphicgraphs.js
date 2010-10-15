@@ -240,7 +240,7 @@ function graphs_internalConfiguration(canvas)
     if(verticalMin < 0 && verticalMax > 0)
         verticalLineCoordinate = Math.abs(horizontalMin);
     else if(verticalMin > 0)
-        verticalLineCoordinate = horizontalMax;
+        verticalLineCoordinate = horizontalMin;
     else
         verticalLineCoordinate = Math.abs(horizontalMin);
 }
